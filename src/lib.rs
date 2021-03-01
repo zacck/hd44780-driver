@@ -319,7 +319,7 @@ where
         self.bus.write(cmd, false).await?;
 
         // Wait for the command to be processed
-        Timer::after(Duration::from_us(100 as u64)).await;
+        Timer::after(Duration::from_micros(100 as u64)).await;
         Ok(())
     }
 
@@ -337,35 +337,35 @@ where
         self.bus.write(0x32, false).await?;
 
         // Wait for the command to be processed
-        Timer::after(Duration::from_us(100 as u64)).await;
+        Timer::after(Duration::from_micros(100 as u64)).await;
 
         self.bus.write(0x28, false).await?;
 
         // Wait for the command to be processed
-        Timer::after(Duration::from_us(100 as u64)).await;
+        Timer::after(Duration::from_micros(100 as u64)).await;
 
         // Clear Display
         self.bus.write(0x0E, false).await?;
 
         // Wait for the command to be processed
-        Timer::after(Duration::from_us(100 as u64)).await;
+        Timer::after(Duration::from_micros(100 as u64)).await;
 
         // Move the cursor to beginning of first line
         self.bus.write(0x01, false).await?;
 
         // Wait for the command to be processed
-        Timer::after(Duration::from_us(100 as u64)).await;
+        Timer::after(Duration::from_micros(100 as u64)).await;
 
         // Set entry mode
         self.bus.write(self.entry_mode.as_byte(), false).await?;
 
         // Wait for the command to be processed
-        Timer::after(Duration::from_us(100 as u64)).await;
+        Timer::after(Duration::from_micros(100 as u64)).await;
 
         self.bus.write(0x80, false).await?;
 
         // Wait for the command to be processed
-        Timer::after(Duration::from_us(100 as u64)).await;
+        Timer::after(Duration::from_micros(100 as u64)).await;
 
         Ok(())
     }
@@ -385,30 +385,30 @@ where
         self.bus.write(0b0011_1000, false).await?;
 
         // Wait for the command to be processed
-        Timer::after(Duration::from_us(100 as u64)).await;
+        Timer::after(Duration::from_micros(100 as u64)).await;
 
         self.bus.write(0b0000_1110, false).await?;
 
         // Wait for the command to be processed
-        Timer::after(Duration::from_us(100 as u64)).await;
+        Timer::after(Duration::from_micros(100 as u64)).await;
 
         // Clear Display
         self.bus.write(0b0000_0001, false).await?;
 
         // Wait for the command to be processed
-        Timer::after(Duration::from_us(100 as u64)).await;
+        Timer::after(Duration::from_micros(100 as u64)).await;
 
         // Move the cursor to beginning of first line
         self.bus.write(0b000_0111, false).await?;
 
         // Wait for the command to be processed
-        Timer::after(Duration::from_us(100 as u64)).await;
+        Timer::after(Duration::from_micros(100 as u64)).await;
 
         // Set entry mode
         self.bus.write(self.entry_mode.as_byte(), false).await?;
 
         // Wait for the command to be processed
-        Timer::after(Duration::from_us(100 as u64)).await;
+        Timer::after(Duration::from_micros(100 as u64)).await;
 
         Ok(())
     }
@@ -455,7 +455,7 @@ where
         self.bus.write(data, true).await?;
 
         // Wait for the command to be processed
-        Timer::after(Duration::from_us(100 as u64)).await;
+        Timer::after(Duration::from_micros(100 as u64)).await;
 
         Ok(())
     }
