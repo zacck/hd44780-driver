@@ -13,3 +13,5 @@ readme = "README.md"
 
 [dependencies]
 embedded-hal = "0.2.3"
+async-trait = "0.1"
+embassy = { verison = "*", path = "../embassy/embassy"}

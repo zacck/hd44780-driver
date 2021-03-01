@@ -1,4 +1,5 @@
-use embedded_hal::blocking::delay::{DelayMs, DelayUs};
+use core::future::Future;
+use embassy::time::{Duration, Timer};
 use embedded_hal::digital::v2::OutputPin;
 
 use crate::{
@@ -132,40 +133,35 @@ impl<
 }
 
 impl<
-        RS: OutputPin,
-        EN: OutputPin,
-        D0: OutputPin,
-        D1: OutputPin,
-        D2: OutputPin,
-        D3: OutputPin,
-        D4: OutputPin,
-        D5: OutputPin,
-        D6: OutputPin,
-        D7: OutputPin,
+        RS: OutputPin + 'static,
+        EN: OutputPin + 'static,
+        D0: OutputPin + 'static,
+        D1: OutputPin + 'static,
+        D2: OutputPin + 'static,
+        D3: OutputPin + 'static,
+        D4: OutputPin + 'static,
+        D5: OutputPin + 'static,
+        D6: OutputPin + 'static,
+        D7: OutputPin + 'static,
     > DataBus for EightBitBus<RS, EN, D0, D1, D2, D3, D4, D5, D6, D7>
 {
-    fn write<D: DelayUs<u16> + DelayMs<u8>>(
-        &mut self,
-        byte: u8,
-        data: bool,
-        delay: &mut D,
-    ) -> Result<()> {
-        if data {
-            self.rs.set_high().map_err(|_| Error)?;
-        } else {
-            self.rs.set_low().map_err(|_| Error)?;
+    type WriteFuture<'a> = impl Future<Output = Result<()>> + 'a;
+
+    fn write<'a>(&'a mut self, byte: u8, data: bool) -> Self::WriteFuture<'a> {
+        async move {
+            if data {
+                self.rs.set_high().map_err(|_| Error)?;
+            } else {
+                self.rs.set_low().map_err(|_| Error)?;
+            }
+            self.set_bus_bits(byte)?;
+            self.en.set_high().map_err(|_| Error)?;
+            Timer::after(Duration::from_millis(2u8 as u64)).await;
+            self.en.set_low().map_err(|_| Error)?;
+            if data {
+                self.rs.set_low().map_err(|_| Error)?;
+            }
+            Ok(())
         }
-
-        self.set_bus_bits(byte)?;
-
-        self.en.set_high().map_err(|_| Error)?;
-        delay.delay_ms(2u8);
-        self.en.set_low().map_err(|_| Error)?;
-
-        if data {
-            self.rs.set_low().map_err(|_| Error)?;
-        }
-
-        Ok(())
     }
 }
